@@ -95,13 +95,8 @@ function DataTable(args) {
         icons={tableIcons}
         title={args.label}
         data={args.state[args.state[args.id].dataref].data}
-        columns={args.state[args.state[args.id].dataref].cols}
-        options={{
-          search: true,
-          paging: false,
-          filtering: true,
-          exportButton: true,
-        }}
+        columns={args.state[args.id].colspecs.length>0 ? args.state[args.id].colspecs : args.state[args.state[args.id].dataref].cols} 
+        options={args.state[args.id].options}
       />
     </div>
   );
@@ -224,6 +219,7 @@ function accumulateStateEntry(state, wspec) {
         dataref: wspec.dataref,
         cols: [],
         colspecs: wspec.colspecs,
+        options: wspec.options
       };
       break;
     case "query":
