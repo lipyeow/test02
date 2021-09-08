@@ -4,6 +4,8 @@ import MaterialTable from "material-table";
 import { ApolloClient, InMemoryCache, useQuery, gql } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
 
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import { Component, forwardRef } from "react";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
@@ -90,7 +92,6 @@ function DataTable(args) {
   //console.log("typedef : " + typeof(args.updateData))
   console.log(args.state[args.id]);
   return (
-    <div style={{ maxWidth: "100%" }}>
       <MaterialTable
         icons={tableIcons}
         title={args.label}
@@ -98,15 +99,19 @@ function DataTable(args) {
         columns={args.state[args.id].colspecs.length>0 ? args.state[args.id].colspecs : args.state[args.state[args.id].dataref].cols} 
         options={args.state[args.id].options}
       />
-    </div>
   );
 }
-const useStyles = makeStyles((theme) => ({
+//    <div style={{ maxWidth: "100%" }}>
+//    </div>
+
+const useStyles = makeStyles((theme) => (
+{
   root: {
     "& > *": {
       margin: theme.spacing(1),
       width: "25ch",
     },
+    flexgrow: 1,
   },
   formControl: {
     margin: theme.spacing(1),
@@ -115,72 +120,81 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-}));
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }
+}
+));
 
 function QueryForm(args) {
   const classes = useStyles();
   return (
     <form className={classes.root} noValidate autoComplete="off">
       {args.widgets.map((spec) =>
-        genWidget(spec, args.callbacks, args.state, classes)
-      )}
+        (<Widget wspec={spec} callbacks={args.callbacks} state={args.state} widgets={args.widget}/>)
+      )} 
     </form>
   );
 }
 
-function genWidget(wspec, callbacks, state, classes) {
-  switch (wspec.type) {
+function Widget(args) {
+  const classes = useStyles();
+  switch (args.wspec.type) {
     case "form":
       return (
         <QueryForm
-          key={wspec.id}
-          callbacks={callbacks}
-          state={state}
-          widgets={wspec.widgets}
+          key={args.wspec.id}
+          callbacks={args.callbacks}
+          state={args.state}
+          widgets={args.wspec.widgets}
         />
       );
     case "table":
       return (
+        <Grid item xs={12}>
         <DataTable
-          key={wspec.id}
-          id={wspec.id}
-          label={wspec.label}
-          state={state}
-          updateData={callbacks.updateData}
+          key={args.wspec.id}
+          id={args.wspec.id}
+          label={args.wspec.label}
+          state={args.state}
+          updateData={args.callbacks.updateData}
         />
+        </Grid>
       );
     case "text_input":
       return (
         <TextField
-          key={wspec.id}
-          state={state}
+          key={args.wspec.id}
+          state={args.state}
           id="queryinput"
-          label={wspec.label}
-          onChange={(event) => callbacks.handleTextChange(wspec.id, event)}
+          label={args.wspec.label}
+          onChange={(event) => args.callbacks.handleTextChange(args.wspec.id, event)}
           variant="outlined"
         />
       );
     case "menu":
       return (
         <FormControl
-          key={wspec.id}
-          state={state}
+          key={args.wspec.id}
+          state={args.state}
           variant="filled"
           className={classes.formControl}
         >
           <InputLabel id="demo-simple-select-filled-label">
-            {wspec.label}
+            {args.wspec.label}
           </InputLabel>
           <Select
             labelId="demo-simple-select-filled-label"
             id="qtypedropdown"
-            value={state[wspec.id].value}
-            onChange={(event) => callbacks.handleSelectChange(wspec.id, event)}
+            value={args.state[args.wspec.id].value}
+            onChange={(event) => args.callbacks.handleSelectChange(args.wspec.id, event)}
           >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {wspec.values.map((v) => {
+            {args.wspec.values.map((v) => {
               return (
                 <MenuItem key={v.id} value={v.value}>
                   {v.display}
@@ -193,19 +207,23 @@ function genWidget(wspec, callbacks, state, classes) {
     case "button":
       return (
         <Button
-          key={wspec.id}
-          state={state}
-          id={wspec.id}
-          trigger={wspec.trigger}
+          key={args.wspec.id}
+          state={args.state}
+          id={args.wspec.id}
+          trigger={args.wspec.trigger}
           variant="contained"
-          onClick={() => callbacks.handleClick(wspec.id)}
+          onClick={() => args.callbacks.handleClick(args.wspec.id)}
         >
-          {wspec.label}
+          {args.wspec.label}
         </Button>
       );
     case "text":
       return (
-        <div key={wspec.id} dangerouslySetInnerHTML={{ __html: wspec.value }} />
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+          <div key={args.wspec.id} dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
+          </Paper>
+        </Grid >
       );
     default:
       return null;
@@ -451,21 +469,29 @@ class App extends Component {
     }
   }
   generateWidget(wspec) {
+
     const callbacks = {
       handleClick: (id) => this.handleClick(id),
       handleTextChange: (id, event) => this.handleTextChange(id, event),
       handleSelectChange: (id, event) => this.handleSelectChange(id, event),
       updateData: (id, d, c) => this.updateData(id, d, c),
     };
-    return genWidget(wspec, callbacks, this.state, null);
+    return (<Widget 
+            wspec={wspec} 
+            callbacks={callbacks} 
+            state={this.state} 
+            widgets={this.spec.widgets}
+        />);
   }
 
   render() {
     return (
       <div style={{ maxWidth: "100%" }}>
-        <ApolloProvider client={client}>
-          {this.spec.widgets.map((spec) => this.generateWidget(spec))}
-        </ApolloProvider>
+        <Grid container className={{flexGrow: 1}} spacing={2}>
+          <ApolloProvider client={client}>
+            {this.spec.widgets.map((spec) => this.generateWidget(spec))}
+          </ApolloProvider>
+        </Grid>
       </div>
     );
   }
