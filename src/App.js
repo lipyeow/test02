@@ -80,16 +80,6 @@ const data_query = gql`
 `;
 
 function DataTable(args) {
-  //    const { loading, error, data } = useQuery(data_query,
-  //            { variables: {id: args.tid} });
-  //
-  //    if (loading) return <p>Loading...</p>;
-  //    if (error) return <p>Error {error.message} </p>;
-  //
-  //    args.updateData(args.tid, JSON.parse(data.getData.data), JSON.parse(data.getData.colstr));
-  //JSON.parse(data.getData.data)
-  //JSON.parse(data.getData.colstr)
-  //console.log("typedef : " + typeof(args.updateData))
   console.log(args.state[args.id]);
   return (
       <MaterialTable

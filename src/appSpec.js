@@ -55,9 +55,9 @@ const app_spec = {
     },
     { 
       type: "table",
-      id  : "t1",
+      id  : "tPub",
       label: (<h1>Publications</h1>),
-      dataref: "q1",
+      dataref: "qPub",
       colspecs: [{title: "Year", field: "year", cellStyle: { cellWidth: "10%" }},
                  {title: "Venue", field: "venue", cellStyle: { cellWidth: "20%"}},
                  {title: "Title", field: "title", cellStyle: { cellWidth: "50%"}},
@@ -95,13 +95,38 @@ const app_spec = {
           tableLayout: "auto"
         }
     },
+    { 
+      type: "table",
+      id  : "tTeach",
+      label: (<h1>Teaching</h1>),
+      dataref: "qTeach",
+      colspecs: [{title: "Year", field: "year"},
+                 {title: "Semester", field: "semester"},
+                 {title: "Course", field: "num"},
+                 {title: "Title", field: "title", defaultGroupOrder: 0 },
+                 {title: "Level", field: "level"},
+                 {title: "Website", field: "url",
+                  render: rowData => (
+                    <a href={rowData.url} download>{rowData.url}</a> ),
+                    },
+                ],
+      options: {
+          search: true,
+          paging: false,
+          filtering: false,
+          exportButton: true,
+          maxBodyHeight: "50vh",
+          tableLayout: "auto",
+          grouping: true
+        }
+    },
     { type: "text",
       id: "txt2",
       value: "Projects"
     },
     { 
       type: "query",
-      id  : "q1",
+      id  : "qPub",
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/pubs.json",
@@ -126,6 +151,16 @@ const app_spec = {
       fetch_on_init: true,
       args: []
     },
+    { 
+      type: "query",
+      id  : "qTeach",
+      backend: "urlfetch",
+      endpoint: "r0",
+      query: "https://lipyeow.github.io/test02/data/teaching.json",
+      fetch_on_init: true,
+      args: []
+    },
+
 
     { 
       type: "query",
