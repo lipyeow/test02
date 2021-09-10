@@ -1,5 +1,7 @@
 import "./App.css";
 
+import React from 'react';
+
 import MaterialTable from "material-table";
 import { ApolloClient, InMemoryCache, useQuery, gql } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
@@ -32,6 +34,15 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
+
+// for tab containers
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+
 
 import { app_spec } from "./appSpec";
 
@@ -102,6 +113,7 @@ const useStyles = makeStyles((theme) => (
       width: "25ch",
     },
     flexgrow: 1,
+    backgroundColor: theme.palette.background.paper,
   },
   formControl: {
     margin: theme.spacing(1),
@@ -118,6 +130,65 @@ const useStyles = makeStyles((theme) => (
 }
 ));
 
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+function TabContainer(args) {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div className={classes.root} >
+      <AppBar position="static" style={{ minWidth: "100%" }}>
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
+            variant="fullWidth">
+          { args.tabs.map( (tab) =>  
+                (<Tab label={tab.label} {...a11yProps(tab.idx)} />)) }
+        </Tabs>
+      </AppBar>
+      { args.tabs.map( (tab) =>  
+                (<TabPanel value={value} index={tab.idx} style={{ minWidth: "100%" }}>
+                    { tab.widgets.map( (spec) => (<Widget wspec={spec} callbacks={args.callbacks} state={args.state} />) ) }
+                </TabPanel>
+                )) }
+    </div>
+  );
+}
+
 function QueryForm(args) {
   const classes = useStyles();
   return (
@@ -132,6 +203,18 @@ function QueryForm(args) {
 function Widget(args) {
   const classes = useStyles();
   switch (args.wspec.type) {
+    case "tabcontainer":
+      console.log("tabcontainer!");
+      return (
+        <Grid item xs={12}>
+          <TabContainer
+            key={args.wspec.id}
+            callbacks={args.callbacks}
+            state={args.state}
+            tabs={args.wspec.tabs}
+          />
+        </Grid>
+      );
     case "form":
       return (
         <QueryForm
@@ -257,6 +340,9 @@ function accumulateStateEntry(state, wspec) {
     case "form":
       genStateStruct(state, wspec.widgets);
       break;
+    case "tabcontainer":
+      wspec.tabs.map( (tab) => genStateStruct(state, tab.widgets) );
+      break;
     default:
       break;
   }
@@ -359,6 +445,11 @@ class App extends Component {
     super(props);
     this.spec = app_spec;
     this.staging = genStateStruct({}, app_spec.widgets);
+    this.state = this.staging;
+    console.log(this.state);
+  }
+
+  componentDidMount(){
     this.spec.widgets.map((wspec) => {
       if (
         wspec.type === "query" &&
@@ -369,8 +460,7 @@ class App extends Component {
       }
       return null;
     });
-    this.state = this.staging;
-    console.log(this.state);
+
   }
   handleTextChange(id, event) {
     console.log("handleTextChange(" + id + "): ");

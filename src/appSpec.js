@@ -1,7 +1,7 @@
-
 const app_spec = {
-  widgets : [
-    { type: "text",
+  widgets: [
+    {
+      type: "text",
       id: "txt1",
       value: `
 <table width=100%>
@@ -28,165 +28,225 @@ const app_spec = {
    </td>
 </tr>
 </table>
-`
+`,
     },
-    { 
-      type: "table",
-      id  : "tEdu",
-      label: (<h1>Education</h1>),
-      dataref: "qEdu",
-      colspecs: [
-                    {title: "Year", field: "year"},
-                    {title: "Degree", field: "degree"},
-                    {title: "Major", field: "major"},
-                    {title: "School", field: "institution"},
-                    {title: "Thesis", field: "thesis"},
-                    {title: "Advisor", field: "advisor"},
-                ],
-      options: {
-          search: false,
-          paging: false,
-          filtering: false,
-          exportButton: false,
-          tableLayout: "auto",
-          showTitle: true,
-          toolbar: true
-        }
+    {
+      type: "tabcontainer",
+      id: "tabcontainer01",
+      tabs: [
+        {
+          label: "Education",
+          idx: 0,
+          widgets: [
+            {
+              type: "table",
+              id: "tEdu",
+              label: <h1>Education</h1>,
+              dataref: "qEdu",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Degree", field: "degree" },
+                { title: "Major", field: "major" },
+                { title: "School", field: "institution" },
+                { title: "Thesis", field: "thesis" },
+                { title: "Advisor", field: "advisor" },
+              ],
+              options: {
+                search: false,
+                paging: false,
+                filtering: false,
+                exportButton: false,
+                tableLayout: "auto",
+                showTitle: true,
+                toolbar: true,
+              },
+            },
+          ],
+        },
+        {
+          label: "Publications",
+          idx: 1,
+          widgets: [
+            {
+              type: "table",
+              id: "tPub",
+              label: <h1>Publications</h1>,
+              dataref: "qPub",
+              colspecs: [
+                {
+                  title: "Year",
+                  field: "year",
+                  cellStyle: { cellWidth: "10%" },
+                },
+                {
+                  title: "Venue",
+                  field: "venue",
+                  cellStyle: { cellWidth: "20%" },
+                },
+                {
+                  title: "Title",
+                  field: "title",
+                  cellStyle: { cellWidth: "50%" },
+                },
+                {
+                  title: "Authors",
+                  field: "authors",
+                  cellStyle: { cellWidth: "20%" },
+                },
+                {
+                  title: "pdf",
+                  field: "pdf",
+                  render: (rowData) => (
+                    <a
+                      href={"https://lipyeow.github.io/home/" + rowData.pdf}
+                      download
+                    >
+                      pdf
+                    </a>
+                  ),
+                },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                tableLayout: "auto",
+              },
+            },
+          ],
+        },
+        {
+          label: "Students",
+          idx: 2,
+          widgets: [
+            {
+              type: "table",
+              id: "tStu",
+              label: <h1>Students</h1>,
+              dataref: "qStu",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Degree", field: "degree" },
+                { title: "Name", field: "name" },
+                { title: "Thesis", field: "thesis" },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                tableLayout: "auto",
+              },
+            },
+          ],
+        },
+        {
+          label: "Teaching",
+          idx: 3,
+          widgets: [
+            {
+              type: "table",
+              id: "tTeach",
+              label: <h1>Teaching</h1>,
+              dataref: "qTeach",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Semester", field: "semester" },
+                { title: "Course", field: "num" },
+                { title: "Title", field: "title", defaultGroupOrder: 0 },
+                { title: "Level", field: "level" },
+                {
+                  title: "Website",
+                  field: "url",
+                  render: (rowData) => (
+                    <a href={rowData.url} download>
+                      {rowData.url}
+                    </a>
+                  ),
+                },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                tableLayout: "auto",
+                grouping: true,
+              },
+            },
+          ],
+        },
+      ],
     },
-    { 
-      type: "table",
-      id  : "tPub",
-      label: (<h1>Publications</h1>),
-      dataref: "qPub",
-      colspecs: [{title: "Year", field: "year", cellStyle: { cellWidth: "10%" }},
-                 {title: "Venue", field: "venue", cellStyle: { cellWidth: "20%"}},
-                 {title: "Title", field: "title", cellStyle: { cellWidth: "50%"}},
-                 {title: "Authors", field: "authors", cellStyle: { cellWidth: "20%"}},
-                 {title: "pdf", field: "pdf", 
-                  render: rowData => (
-                    <a href={"https://lipyeow.github.io/home/" + rowData.pdf} download>pdf</a> ),
-                 }
-                ],
-      options: {
-          search: true,
-          paging: false,
-          filtering: false,
-          exportButton: true,
-          maxBodyHeight: "50vh",
-          tableLayout: "auto"
-        }
-    },
-    { 
-      type: "table",
-      id  : "tStu",
-      label: (<h1>Students</h1>),
-      dataref: "qStu",
-      colspecs: [{title: "Year", field: "year"},
-                 {title: "Degree", field: "degree"},
-                 {title: "Name", field: "name"},
-                 {title: "Thesis", field: "thesis"},
-                ],
-      options: {
-          search: true,
-          paging: false,
-          filtering: false,
-          exportButton: true,
-          maxBodyHeight: "50vh",
-          tableLayout: "auto"
-        }
-    },
-    { 
-      type: "table",
-      id  : "tTeach",
-      label: (<h1>Teaching</h1>),
-      dataref: "qTeach",
-      colspecs: [{title: "Year", field: "year"},
-                 {title: "Semester", field: "semester"},
-                 {title: "Course", field: "num"},
-                 {title: "Title", field: "title", defaultGroupOrder: 0 },
-                 {title: "Level", field: "level"},
-                 {title: "Website", field: "url",
-                  render: rowData => (
-                    <a href={rowData.url} download>{rowData.url}</a> ),
-                    },
-                ],
-      options: {
-          search: true,
-          paging: false,
-          filtering: false,
-          exportButton: true,
-          maxBodyHeight: "50vh",
-          tableLayout: "auto",
-          grouping: true
-        }
-    },
-    { type: "text",
-      id: "txt2",
-      value: "Projects"
-    },
-    { 
+    {
       type: "query",
-      id  : "qPub",
+      id: "qPub",
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/pubs.json",
       fetch_on_init: true,
-      args: []
+      args: [],
     },
-    { 
+    {
       type: "query",
-      id  : "qEdu",
+      id: "qEdu",
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/education.json",
       fetch_on_init: true,
-      args: []
+      args: [],
     },
-    { 
+    {
       type: "query",
-      id  : "qStu",
+      id: "qStu",
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/students.json",
       fetch_on_init: true,
-      args: []
+      args: [],
     },
-    { 
+    {
       type: "query",
-      id  : "qTeach",
+      id: "qTeach",
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/teaching.json",
       fetch_on_init: true,
-      args: []
+      args: [],
     },
 
-
-    { 
+    {
       type: "query",
-      id  : "q2",
+      id: "q2",
       backend: "constant",
       endpoint: "r0",
-      query: { "cols": [
-            { title: 'Year', field: 'year' },
-            { title: 'Title', field: 'title' },
-            { title: 'Venue', field: 'venue' }
-          ], "data": [
-  {
-    "year": "2020",
-    "title": "Deep learning",
-    "authors": "john et al",
-    "venue": "vldb"
-  },
-  {
-    "year": "2021",
-    "title": "<a href=\"https://lipyeow.github.io/home/\">pdf</a>",
-    "authors": "Tim et al",
-    "venue": "sigmod"
-  }
-]},
-      args: [{from: "ti1"}, {from: "ti1"}, {from: "m1"}, {from: "m1"}]
-    }
+      query: {
+        cols: [
+          { title: "Year", field: "year" },
+          { title: "Title", field: "title" },
+          { title: "Venue", field: "venue" },
+        ],
+        data: [
+          {
+            year: "2020",
+            title: "Deep learning",
+            authors: "john et al",
+            venue: "vldb",
+          },
+          {
+            year: "2021",
+            title: '<a href="https://lipyeow.github.io/home/">pdf</a>',
+            authors: "Tim et al",
+            venue: "sigmod",
+          },
+        ],
+      },
+      args: [{ from: "ti1" }, { from: "ti1" }, { from: "m1" }, { from: "m1" }],
+    },
   ],
 };
 
