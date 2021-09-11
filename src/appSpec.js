@@ -1,34 +1,73 @@
+
+const edu_data = [
+{
+    "year": 2004,
+    "month": "August",
+    "degree": "Ph.D.",
+    "major": "Computer Science",
+    "institution": "Duke University",
+    "sub-institution": "Department of Computer Science",
+    "thesis": "Online Methods for Database Optimization",
+    "advisor": "Jeffrey Scott Vitter",
+    "committee": "Min Wang, Ronald Parr, Jun Yang",
+    "gpa": 3.9
+},
+{
+    "year": 2000,
+    "month": "September",
+    "degree": "M.Sc.",
+    "major": "Information Systems & Computer Science",
+    "institution": "National University of Singapore",
+    "sub-institution": "School of Computing",
+    "thesis": "A Theoretical Look at Pixel Ordering",
+    "advisor": "Philip M. Long",
+    "committee": "Ghim-Hwee Ong, Wee-Sun Lee",
+    "gpa": null
+},
+{
+    "year": 1999,
+    "month": "May",
+    "degree": "B.Sc.",
+    "major": "Information Systems & Computer Science",
+    "institution": "National University of Singapore",
+    "sub-institution": "School of Computing",
+    "thesis": "Implementation of the mobile IPv4 configuration option for PPP IPCP (RFC 2290)",
+    "advisor": "Yong-Chiang (Y. C.) Tay",
+    "committee": "Kam-Hong Shum, Kwok-Yan Lam",
+    "gpa": 3.5
+}
+];
+
+// text: 
+//  - widths are in grid xs units
+//  - justify is passed to grid container justifyContent prop
 const app_spec = {
   widgets: [
     {
       type: "text",
       id: "txt1",
+      width: 4,
+      justify: "space-evenly",
       value: `
-<table width=100%>
-<tr>
-   <td width=8%>&nbsp;</td>
-   <td>
-      <IMG border="1"
-            align=left 
-            SRC="https://lipyeow.github.io/home/img/lypic2018.jpg" height=250 />
-   </td>
-   <td width=7%>&nbsp;</td>
-   <td width=85%>
+            <br/>
+            <IMG border="1" style="float: middle; display: inline-block; height: 220px; vertical-align: middle;" 
+           src="https://lipyeow.github.io/home/img/lypic2018.jpg"/>
+            `,
+    },
+    {
+      type: "text",
+      id: "txt2",
+      width: 8,
+      justify: "flex-start",
+      value: `
       <h1>Lipyeow Lim &nbsp; &nbsp; &#26519;&#31435;&#32768; </h1>
+      <i>Computer Scientist, Educator, Software Engineer</i>
       
-      <h2>Associate Professor</h2>
-      
-      Information and Computer Science Department <br/>
-      University of Hawaii at Manoa <br/>
-      1680 East West Road, POST 303E <br/>
-      Honolulu, HI 96822, USA <br/>
-      <b>Email</b>: lipyeow at hawaii dot edu 
-      <b>Tel</b>: 808-956-3495 <br/>
       <br/>
-   </td>
-</tr>
-</table>
-`,
+      <br/>
+      Fremont, CA, USA <br/>
+      <b>Email</b>: lipyeow at gmail dot com
+      `,
     },
     {
       type: "tabcontainer",
@@ -41,8 +80,8 @@ const app_spec = {
             {
               type: "table",
               id: "tEdu",
-              label: <h1>Education</h1>,
-              dataref: "qEdu",
+              label: <i>Schools that molded me.</i>,
+              dataref: "qEduConst",
               colspecs: [
                 { title: "Year", field: "year" },
                 { title: "Degree", field: "degree" },
@@ -70,32 +109,14 @@ const app_spec = {
             {
               type: "table",
               id: "tPub",
-              label: <h1>Publications</h1>,
+              label: <i>Scientific publications I have (co-)authored.</i>,
               dataref: "qPub",
               colspecs: [
-                {
-                  title: "Year",
-                  field: "year",
-                  cellStyle: { cellWidth: "10%" },
-                },
-                {
-                  title: "Venue",
-                  field: "venue",
-                  cellStyle: { cellWidth: "20%" },
-                },
-                {
-                  title: "Title",
-                  field: "title",
-                  cellStyle: { cellWidth: "50%" },
-                },
-                {
-                  title: "Authors",
-                  field: "authors",
-                  cellStyle: { cellWidth: "20%" },
-                },
-                {
-                  title: "pdf",
-                  field: "pdf",
+                { title: "Year", field: "year", },
+                { title: "Venue", field: "venue", },
+                { title: "Title", field: "title", },
+                { title: "Authors", field: "authors", },
+                { title: "pdf", field: "pdf",
                   render: (rowData) => (
                     <a
                       href={"https://lipyeow.github.io/home/" + rowData.pdf}
@@ -124,7 +145,7 @@ const app_spec = {
             {
               type: "table",
               id: "tStu",
-              label: <h1>Students</h1>,
+              label: <i>Students whom I have had the privilege of mentoring.</i>,
               dataref: "qStu",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -150,7 +171,7 @@ const app_spec = {
             {
               type: "table",
               id: "tTeach",
-              label: <h1>Teaching</h1>,
+              label: <i>Courses I have taught at the University of Hawaii at Manoa.</i>,
               dataref: "qTeach",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -197,7 +218,7 @@ const app_spec = {
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/education.json",
-      fetch_on_init: true,
+      fetch_on_init: false,
       args: [],
     },
     {
@@ -218,7 +239,6 @@ const app_spec = {
       fetch_on_init: true,
       args: [],
     },
-
     {
       type: "query",
       id: "q2",
@@ -246,6 +266,17 @@ const app_spec = {
         ],
       },
       args: [{ from: "ti1" }, { from: "ti1" }, { from: "m1" }, { from: "m1" }],
+    },
+    {
+      type: "query",
+      id: "qEduConst",
+      backend: "constant",
+      endpoint: "r0",
+      query: {
+        cols: [],
+        data: edu_data  
+      },
+      args: [],
     },
   ],
 };

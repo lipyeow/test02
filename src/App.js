@@ -126,7 +126,20 @@ const useStyles = makeStyles((theme) => (
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-  }
+  },
+  customOne: {
+    padding: '3rem 15rem',
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    fontFamily: 'Open Sans',
+  },
+  customTwo: {
+    padding: '0rem',
+    color: '#484848',
+    backgroundColor: '#bbbbbb',
+    fontFamily: 'Open Sans',
+    fontSize: '1rem',
+  },
 }
 ));
 
@@ -175,7 +188,9 @@ function TabContainer(args) {
     <div className={classes.root} >
       <AppBar position="static" style={{ minWidth: "100%" }}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
-            variant="fullWidth">
+            variant="fullWidth"
+            className={classes.customTwo}
+            >
           { args.tabs.map( (tab) =>  
                 (<Tab label={tab.label} {...a11yProps(tab.idx)} />)) }
         </Tabs>
@@ -200,6 +215,7 @@ function QueryForm(args) {
   );
 }
 
+// Grid will use 12 units has maxwidth
 function Widget(args) {
   const classes = useStyles();
   switch (args.wspec.type) {
@@ -217,23 +233,25 @@ function Widget(args) {
       );
     case "form":
       return (
-        <QueryForm
-          key={args.wspec.id}
-          callbacks={args.callbacks}
-          state={args.state}
-          widgets={args.wspec.widgets}
-        />
+        <Grid item xs={12}>
+          <QueryForm
+            key={args.wspec.id}
+            callbacks={args.callbacks}
+            state={args.state}
+            widgets={args.wspec.widgets}
+          />
+        </Grid>
       );
     case "table":
       return (
         <Grid item xs={12}>
-        <DataTable
-          key={args.wspec.id}
-          id={args.wspec.id}
-          label={args.wspec.label}
-          state={args.state}
-          updateData={args.callbacks.updateData}
-        />
+          <DataTable
+            key={args.wspec.id}
+            id={args.wspec.id}
+            label={args.wspec.label}
+            state={args.state}
+            updateData={args.callbacks.updateData}
+          />
         </Grid>
       );
     case "text_input":
@@ -292,12 +310,18 @@ function Widget(args) {
       );
     case "text":
       return (
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-          <div key={args.wspec.id} dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
-          </Paper>
+        <Grid container xs={args.wspec.width} 
+            justifyContent={args.wspec.justify}
+            >
+          <Grid item xs={args.wspec.width}>
+          <br/>
+          <div key={args.wspec.id}
+            dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
+          </Grid >
         </Grid >
       );
+//          <Paper className={classes.paper}>
+//          </Paper>
     default:
       return null;
   }
@@ -567,7 +591,9 @@ class App extends Component {
   render() {
     return (
       <div style={{ maxWidth: "100%" }}>
-        <Grid container className={{flexGrow: 1}} spacing={2}>
+        <Grid container className={{flexGrow: 1}} spacing={5}
+            alignContent='flex-start' alignItems='flex-start' justify='flex-start'
+>
           <ApolloProvider client={client}>
             {this.spec.widgets.map((spec) => this.generateWidget(spec))}
           </ApolloProvider>
