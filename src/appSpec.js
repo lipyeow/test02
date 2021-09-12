@@ -1,42 +1,4 @@
-
-const edu_data = [
-{
-    "year": 2004,
-    "month": "August",
-    "degree": "Ph.D.",
-    "major": "Computer Science",
-    "institution": "Duke University",
-    "sub-institution": "Department of Computer Science",
-    "thesis": "Online Methods for Database Optimization",
-    "advisor": "Jeffrey Scott Vitter",
-    "committee": "Min Wang, Ronald Parr, Jun Yang",
-    "gpa": 3.9
-},
-{
-    "year": 2000,
-    "month": "September",
-    "degree": "M.Sc.",
-    "major": "Information Systems & Computer Science",
-    "institution": "National University of Singapore",
-    "sub-institution": "School of Computing",
-    "thesis": "A Theoretical Look at Pixel Ordering",
-    "advisor": "Philip M. Long",
-    "committee": "Ghim-Hwee Ong, Wee-Sun Lee",
-    "gpa": null
-},
-{
-    "year": 1999,
-    "month": "May",
-    "degree": "B.Sc.",
-    "major": "Information Systems & Computer Science",
-    "institution": "National University of Singapore",
-    "sub-institution": "School of Computing",
-    "thesis": "Implementation of the mobile IPv4 configuration option for PPP IPCP (RFC 2290)",
-    "advisor": "Yong-Chiang (Y. C.) Tay",
-    "committee": "Kam-Hong Shum, Kwok-Yan Lam",
-    "gpa": 3.5
-}
-];
+import { edu_data } from "./data.js"
 
 // text: 
 //  - widths are in grid xs units
@@ -44,15 +6,11 @@ const edu_data = [
 const app_spec = {
   widgets: [
     {
-      type: "text",
-      id: "txt1",
+      type: "image",
+      id: "img1",
       width: 4,
-      justify: "space-evenly",
-      value: `
-            <br/>
-            <IMG border="1" style="float: middle; display: inline-block; height: 220px; vertical-align: middle;" 
-           src="https://lipyeow.github.io/home/img/lypic2018.jpg"/>
-            `,
+      justify: "center",
+      value: "https://lipyeow.github.io/home/img/lypic2018.jpg"
     },
     {
       type: "text",
@@ -67,6 +25,9 @@ const app_spec = {
       <br/>
       Fremont, CA, USA <br/>
       <b>Email</b>: lipyeow at gmail dot com
+      <br/>
+      <b>LinkedIn</b>: 
+      <a href="www.linkedin.com/in/lipyeowlim">www.linkedin.com/in/lipyeowlim</a>
       `,
     },
     {
@@ -265,7 +226,7 @@ const app_spec = {
           },
         ],
       },
-      args: [{ from: "ti1" }, { from: "ti1" }, { from: "m1" }, { from: "m1" }],
+      args: [],
     },
     {
       type: "query",
@@ -277,8 +238,8 @@ const app_spec = {
         data: edu_data  
       },
       args: [],
-    },
-  ],
+    }
+    ],
 };
 
-export { app_spec };
+export { app_spec, };

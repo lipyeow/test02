@@ -44,8 +44,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 
-import { app_spec } from "./appSpec";
-
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -91,7 +89,7 @@ const data_query = gql`
 `;
 
 function DataTable(args) {
-  console.log(args.state[args.id]);
+  //console.log(args.state[args.id]);
   return (
       <MaterialTable
         icons={tableIcons}
@@ -188,7 +186,7 @@ function TabContainer(args) {
     <div className={classes.root} >
       <AppBar position="static" style={{ minWidth: "100%" }}>
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
-            variant="fullWidth"
+            variant="scrollable" scrollButtons="auto"
             className={classes.customTwo}
             >
           { args.tabs.map( (tab) =>  
@@ -220,7 +218,6 @@ function Widget(args) {
   const classes = useStyles();
   switch (args.wspec.type) {
     case "tabcontainer":
-      console.log("tabcontainer!");
       return (
         <Grid item xs={12}>
           <TabContainer
@@ -308,18 +305,31 @@ function Widget(args) {
           {args.wspec.label}
         </Button>
       );
+    case "image":
+      return (
+        <Grid container xs={args.wspec.width} 
+            justifyContent={args.wspec.justify}
+            alignItems="center"
+            >
+          <Grid item xs={args.wspec.width}>
+            <img alt="portrait" border="1" style={{
+                "marginTop": "2em", 
+                    height: "220px"}} 
+                src={args.wspec.value}/>
+          </Grid >
+        </Grid >
+      );
     case "text":
       return (
         <Grid container xs={args.wspec.width} 
             justifyContent={args.wspec.justify}
             >
           <Grid item xs={args.wspec.width}>
-          <br/>
-          <div key={args.wspec.id}
-            dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
+            <div key={args.wspec.id} dangerouslySetInnerHTML={{__html: args.wspec.value}}/>
           </Grid >
         </Grid >
       );
+            //dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
 //          <Paper className={classes.paper}>
 //          </Paper>
     default:
@@ -358,6 +368,7 @@ function accumulateStateEntry(state, wspec) {
     case "button":
       state[wspec.id] = { value: "", trigger: wspec.trigger };
       break;
+    case "image":
     case "text":
       state[wspec.id] = { value: wspec.value };
       break;
@@ -467,8 +478,8 @@ function extractColumnSpec(data) {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.spec = app_spec;
-    this.staging = genStateStruct({}, app_spec.widgets);
+    this.spec = props.spec;
+    this.staging = genStateStruct({}, props.spec.widgets);
     this.state = this.staging;
     console.log(this.state);
   }
@@ -590,9 +601,11 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{ maxWidth: "100%" }}>
-        <Grid container className={{flexGrow: 1}} spacing={5}
-            alignContent='flex-start' alignItems='flex-start' justify='flex-start'
+      <div className={{flexGrow: 1}} style={{ maxWidth: "100%" }}>
+        <Grid container spacing={5}
+            direction="row"
+            alignContent='flex-start' 
+            alignItems='center' justifyContent='flex-start'
 >
           <ApolloProvider client={client}>
             {this.spec.widgets.map((spec) => this.generateWidget(spec))}

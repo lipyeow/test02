@@ -6,11 +6,11 @@ import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, useQuery, gql } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
 
-
+import { app_spec } from "./appSpec";
 
 ReactDOM.render(
   <React.StrictMode>
-      <App />
+      <App spec={app_spec}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
