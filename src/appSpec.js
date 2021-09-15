@@ -1,6 +1,6 @@
-import { edu_data } from "./data.js"
+import { edu_data } from "./data.js";
 
-// text: 
+// text:
 //  - widths are in grid xs units
 //  - justify is passed to grid container justifyContent prop
 const app_spec = {
@@ -10,7 +10,7 @@ const app_spec = {
       id: "img1",
       width: 4,
       justify: "center",
-      value: "https://lipyeow.github.io/home/img/lypic2018.jpg"
+      value: "https://lipyeow.github.io/home/img/lypic2018.jpg",
     },
     {
       type: "text",
@@ -18,8 +18,8 @@ const app_spec = {
       width: 8,
       justify: "flex-start",
       value: `
-      <h1>Lipyeow Lim &nbsp; &nbsp; &#26519;&#31435;&#32768; </h1>
-      <i>Computer Scientist, Educator, Software Engineer</i>
+      <h1>Lipyeow Lim, Ph.D. &nbsp; &nbsp; &#26519;&#31435;&#32768; </h1>
+      <i>I am a computer scientist, educator, and software engineer by profession -- and a martial artist by avocation.</i>
       
       <br/>
       <br/>
@@ -35,9 +35,56 @@ const app_spec = {
       id: "tabcontainer01",
       tabs: [
         {
-          label: "Education",
+          label: "Software Engineer",
+          id: "tc01-0",
           idx: 0,
           widgets: [
+            {
+              type: "text",
+              id: "txt6",
+              width: 12,
+              justify: "flex-start",
+              value: `
+                <i>My first serious software engineering endeavor was writing a
+linux kernel module for supporting the PPP protocol over MobileIP back in 1998.
+I then progressed to prototyping various research ideas during my graduate
+studies. My software engineering career really began at IBM developing advance
+features for DB2 DBMS and Infosphere Streams software. I then took a break in
+academia teaching students how to write data-intensive software applications as
+well as advising developing nations on their IT projects as a World Bank
+consultant. In 2019, I returned to industry (to FireEye Inc.) to lead
+data-intensive cybersecurity software projects.</i>
+
+                <h2>Projects</h2>
+                `,
+            },
+
+
+          ],
+        },
+        {
+          label: "Computer Scientist",
+          id: "tc01-1",
+          idx: 1,
+          widgets: [
+            {
+              type: "text",
+              id: "txt4",
+              width: 12,
+              justify: "flex-start",
+              value: `
+                <i>My scientific research career started with my masters thesis 
+                on pixel ordering in images. I then investigated the use of 
+                machine learning techniques in optimizing database processing 
+                in my doctoral dissertation. I continued with more general 
+                data management research at the IBM Thomas J. Watson Research
+                Center early in my career before embarking on a professorship
+                at the University of Hawaii at Manoa.</i>
+
+                <h2>Education</h2>
+                `,
+            },
+
             {
               type: "table",
               id: "tEdu",
@@ -61,23 +108,28 @@ const app_spec = {
                 toolbar: true,
               },
             },
-          ],
-        },
-        {
-          label: "Publications",
-          idx: 1,
-          widgets: [
+            {
+              type: "text",
+              id: "txt5",
+              width: 12,
+              justify: "flex-start",
+              value: `
+      <h2>Publications</h2>
+      `,
+            },
             {
               type: "table",
               id: "tPub",
-              label: <i>Scientific publications I have (co-)authored.</i>,
+              label: <i>Scientific articles I have (co-)authored.</i>,
               dataref: "qPub",
               colspecs: [
-                { title: "Year", field: "year", },
-                { title: "Venue", field: "venue", },
-                { title: "Title", field: "title", },
-                { title: "Authors", field: "authors", },
-                { title: "pdf", field: "pdf",
+                { title: "Year", field: "year" },
+                { title: "Venue", field: "venue" },
+                { title: "Title", field: "title" },
+                { title: "Authors", field: "authors" },
+                {
+                  title: "pdf",
+                  field: "pdf",
                   render: (rowData) => (
                     <a
                       href={"https://lipyeow.github.io/home/" + rowData.pdf}
@@ -100,13 +152,25 @@ const app_spec = {
           ],
         },
         {
-          label: "Students",
+          label: "Educator",
+          id: "tc01-2",
           idx: 2,
           widgets: [
             {
+              type: "text",
+              id: "txt_educator",
+              width: 12,
+              justify: "flex-start",
+              value: `
+      <i>Between 2009 and 2019, I was a professor of Information and Computer Science at the University of Hawaii at Manoa where I taught both undergraduate and graduate courses and advised Masters and Doctoral students.</i>
+      `,
+            },
+            {
               type: "table",
               id: "tStu",
-              label: <i>Students whom I have had the privilege of mentoring.</i>,
+              label: (
+                <h2>Students</h2>
+              ),
               dataref: "qStu",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -123,16 +187,12 @@ const app_spec = {
                 tableLayout: "auto",
               },
             },
-          ],
-        },
-        {
-          label: "Teaching",
-          idx: 3,
-          widgets: [
             {
               type: "table",
               id: "tTeach",
-              label: <i>Courses I have taught at the University of Hawaii at Manoa.</i>,
+              label: (
+                <h2>Courses</h2>
+              ),
               dataref: "qTeach",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -159,6 +219,27 @@ const app_spec = {
                 tableLayout: "auto",
                 grouping: true,
               },
+            },
+          ],
+        },
+        {
+          label: "Martial Artist",
+          id: "tc01-3",
+          idx: 3,
+          widgets: [
+            {
+              type: "text",
+              id: "txt_ma",
+              width: 12,
+              justify: "flex-start",
+              value: `
+      <i>Chen Style Taijiquan</i>
+      <br/>
+      <i>I Liq Chuan</i>
+      <br/>
+      <i>Kalis Illustrissimo</i>
+      <br/>
+      `,
             },
           ],
         },
@@ -202,44 +283,16 @@ const app_spec = {
     },
     {
       type: "query",
-      id: "q2",
-      backend: "constant",
-      endpoint: "r0",
-      query: {
-        cols: [
-          { title: "Year", field: "year" },
-          { title: "Title", field: "title" },
-          { title: "Venue", field: "venue" },
-        ],
-        data: [
-          {
-            year: "2020",
-            title: "Deep learning",
-            authors: "john et al",
-            venue: "vldb",
-          },
-          {
-            year: "2021",
-            title: '<a href="https://lipyeow.github.io/home/">pdf</a>',
-            authors: "Tim et al",
-            venue: "sigmod",
-          },
-        ],
-      },
-      args: [],
-    },
-    {
-      type: "query",
       id: "qEduConst",
       backend: "constant",
       endpoint: "r0",
       query: {
         cols: [],
-        data: edu_data  
+        data: edu_data,
       },
       args: [],
-    }
-    ],
+    },
+  ],
 };
 
-export { app_spec, };
+export { app_spec };

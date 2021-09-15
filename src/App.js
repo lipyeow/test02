@@ -8,7 +8,7 @@ import { ApolloProvider } from "@apollo/client/react";
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { Component, forwardRef } from "react";
+import { PureComponent, Component, forwardRef } from "react";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
@@ -154,7 +154,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component={'span'} >{children}</Typography>
         </Box>
       )}
     </div>
@@ -176,25 +176,28 @@ function a11yProps(index) {
 
 function TabContainer(args) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+//  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+//  const handleChange = (event, newValue) => {
+//    setValue(newValue);
+//  };
+  console.log("tabcontainer args.id = " + args.id);
 
   return (
     <div className={classes.root} >
-      <AppBar position="static" style={{ minWidth: "100%" }}>
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"
-            variant="scrollable" scrollButtons="auto"
+      <AppBar key={"appbar-"+args.id} position="static" style={{ minWidth: "100%" }}>
+        <Tabs key={"tabs-"+args.id} value={args.state[args.id].value} onChange={args.onChange} 
+            aria-label="simple tabs example"
+            variant="scrollable"
+            scrollButtons="auto"
             className={classes.customTwo}
             >
           { args.tabs.map( (tab) =>  
-                (<Tab label={tab.label} {...a11yProps(tab.idx)} />)) }
+                (<Tab key={"tab-" + tab.id} label={tab.label} {...a11yProps(tab.idx)} />)) }
         </Tabs>
       </AppBar>
       { args.tabs.map( (tab) =>  
-                (<TabPanel value={value} index={tab.idx} style={{ minWidth: "100%" }}>
+                (<TabPanel key={"tabpanel-"+tab.id} value={args.state[args.id].value} index={tab.idx} style={{ minWidth: "100%" }}>
                     { tab.widgets.map( (spec) => (<Widget wspec={spec} callbacks={args.callbacks} state={args.state} />) ) }
                 </TabPanel>
                 )) }
@@ -222,9 +225,11 @@ function Widget(args) {
         <Grid item xs={12}>
           <TabContainer
             key={args.wspec.id}
+            id={args.wspec.id}
             callbacks={args.callbacks}
             state={args.state}
             tabs={args.wspec.tabs}
+            onChange={(event, newValue) => args.callbacks.handleTabChange(args.wspec.id, event, newValue)}
           />
         </Grid>
       );
@@ -329,7 +334,6 @@ function Widget(args) {
           </Grid >
         </Grid >
       );
-            //dangerouslySetInnerHTML={{ __html: args.wspec.value }} />
 //          <Paper className={classes.paper}>
 //          </Paper>
     default:
@@ -376,6 +380,7 @@ function accumulateStateEntry(state, wspec) {
       genStateStruct(state, wspec.widgets);
       break;
     case "tabcontainer":
+      state[wspec.id] = { value: 0 };
       wspec.tabs.map( (tab) => genStateStruct(state, tab.widgets) );
       break;
     default:
@@ -475,12 +480,14 @@ function extractColumnSpec(data) {
   });
 }
 
-class App extends Component {
+class App extends PureComponent {
   constructor(props) {
     super(props);
     this.spec = props.spec;
-    this.staging = genStateStruct({}, props.spec.widgets);
-    this.state = this.staging;
+    this.state0 = genStateStruct({}, props.spec.widgets);
+    this.state1 = genStateStruct({}, props.spec.widgets);
+    this.staging = this.state1;
+    this.state = this.state0;
     console.log(this.state);
   }
 
@@ -499,16 +506,34 @@ class App extends Component {
   }
   handleTextChange(id, event) {
     console.log("handleTextChange(" + id + "): ");
-    console.log(this.state);
+    //console.log(this.state);
     this.staging[id].value = event.target.value;
   }
 
   handleSelectChange(id, event) {
     console.log("handleSelectChange(" + id + "): ");
-    console.log(this.state);
+    //console.log(this.state);
     this.staging[id].value = event.target.value;
     this.setState(this.staging);
   }
+  handleTabChange(id, event, newValue) {
+    console.log("handleTabChange(" + id + "): ");
+    //console.log(event);
+    //console.log(newValue);
+    //console.log(this.state);
+    this.state0[id].value = newValue;
+    this.state1[id].value = newValue;
+    let frag = {};
+    frag[id] =  this.staging[id];
+    if(this.staging===this.state0){
+        this.staging = this.state1;
+    } else {    
+        this.staging = this.state0;
+    }
+    this.setState(frag);
+    //this.setState(this.staging);
+  }
+
   runPrestoQuery(qid) {
     console.log("Run Presto Query: " + qid);
     prestoFetch(this.staging[qid].query, (data, cols) => {
@@ -589,9 +614,10 @@ class App extends Component {
       handleClick: (id) => this.handleClick(id),
       handleTextChange: (id, event) => this.handleTextChange(id, event),
       handleSelectChange: (id, event) => this.handleSelectChange(id, event),
+      handleTabChange: (id, event, newValue) => this.handleTabChange(id, event, newValue),
       updateData: (id, d, c) => this.updateData(id, d, c),
     };
-    return (<Widget 
+    return (<Widget key={"widget_" + wspec.id}
             wspec={wspec} 
             callbacks={callbacks} 
             state={this.state} 
