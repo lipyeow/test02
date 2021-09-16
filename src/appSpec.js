@@ -56,6 +56,17 @@ consultant. In 2019, I returned to industry (to FireEye Inc.) to lead
 data-intensive cybersecurity software projects.</i>
 
                 <h2>Projects</h2>
+
+                <h2>Patents</h2>
+
+                <ul>
+                <li>A list of <a href="https://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO2&Sect2=HITOFF&p=1&u=%2Fnetahtml%2FPTO%2Fsearch-bool.html&r=0&f=S&l=50&TERM1=Lipyeow&FIELD1=INNM&co1=AND&TERM2=Lim&FIELD2=INNM&d=PTXT">my patents</a> at USPTO Patent Full-Text and Image Database. </li>
+
+                <li>
+                A list of <a href="https://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO2&Sect2=HITOFF&p=1&u=%2Fnetahtml%2FPTO%2Fsearch-bool.html&r=0&f=S&l=50&TERM1=Lipyeow&FIELD1=IN&co1=AND&TERM2=Lim&FIELD2=IN&d=PG01">my patent applications</a> at USPTO Patent Application Full-Text and Image Database. </li>
+                </ul>
+
+
                 `,
             },
 
@@ -82,40 +93,33 @@ data-intensive cybersecurity software projects.</i>
                 at the University of Hawaii at Manoa.</i>
 
                 <h2>Education</h2>
-                `,
-            },
 
-            {
-              type: "table",
-              id: "tEdu",
-              label: <i>Schools that molded me.</i>,
-              dataref: "qEduConst",
-              colspecs: [
-                { title: "Year", field: "year" },
-                { title: "Degree", field: "degree" },
-                { title: "Major", field: "major" },
-                { title: "School", field: "institution" },
-                { title: "Thesis", field: "thesis" },
-                { title: "Advisor", field: "advisor" },
-              ],
-              options: {
-                search: false,
-                paging: false,
-                filtering: false,
-                exportButton: false,
-                tableLayout: "auto",
-                showTitle: true,
-                toolbar: true,
-              },
-            },
-            {
-              type: "text",
-              id: "txt5",
-              width: 12,
-              justify: "flex-start",
-              value: `
-      <h2>Publications</h2>
-      `,
+                <ul>
+                <li>2004 - Ph.D. Computer Science, Duke University. 
+                    <br/>
+                    <ul>
+                    Thesis: <i>Online Methods for Database Optimization</i>.
+                    Advisor: Jeffrey Scott Vitter
+                    </ul>
+                </li>
+                <li>2000 - M.Sc. Information Systems & Computer Science, National University of Singapore. 
+                    <br/>
+                    <ul>
+                    Thesis: <i>A Theoretical Look at Pixel Ordering</i>.
+                    Advisor: Philip M. Long
+                    </ul>
+                </li>
+                <li>1999 - B.Sc. Information Systems & Computer Science, National University of Singapore. 
+                    <br/>
+                    <ul>
+                    Project: <i>Implementation of the mobile IPv4 configuration option for PPP IPCP (RFC 2290)</i>.
+                    Advisor: Yong-Chiang (Y.C.) Tay
+                    </ul>
+                </li>
+                </ul>
+
+                <h2>Publications</h2>
+                `,
             },
             {
               type: "table",
