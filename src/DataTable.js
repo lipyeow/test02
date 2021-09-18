@@ -1,3 +1,5 @@
+
+import React from "react";
 import { forwardRef } from "react";
 import MaterialTable from "material-table";
 import AddBox from "@material-ui/icons/AddBox";
@@ -15,6 +17,16 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import { cloneDeep } from "lodash";
+import { appState } from "./state.js";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -40,24 +52,72 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
+// extract a table column spec from array of recs
+function extractColumnSpec(data) {
+  if (data === null || data.length===0) return [];
+  return Object.keys(data[0]).map((x) => {
+    return { title: x, field: x };
+  });
+}
+
 function DataTable(args) {
-  //console.log(args.state[args.id]);
-  //console.log("DataTable id=" + args.id) 
-  //console.log("DataTable dataref=" + args.state[args.id].dataref) 
-  //console.log("DataTable data=" + args.state[args.state[args.id].dataref].data) 
+
+  const objState = useRecoilValue(appState[args.id]);
+  const [queryState, setQueryState] = useRecoilState(appState[ objState.dataref ]);
+
+  const runUrlFetchQuery = (qid) => {
+    //console.log("Run Url Fetch Query: " + qid);
+    const url = queryState.query;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log("runUrlFetchQuery : " + data);
+        let copyState = cloneDeep(queryState);
+        copyState.data = cloneDeep(data);
+        copyState.cols = extractColumnSpec(data);
+        setQueryState(copyState);
+      });
+  };
+
+  // initialize the data that depends on initial fetch query
+  React.useEffect(() => {
+    if (queryState.backend === "urlfetch" && queryState.fetch_on_init){
+      //console.log("Run Url Fetch Query: " + objState.dataref);
+      const url = queryState.query;
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          //console.log("runUrlFetchQuery : " + data);
+          let copyState = cloneDeep(queryState);
+          copyState.data = cloneDeep(data);
+          copyState.cols = extractColumnSpec(data);
+          setQueryState(copyState);
+        });
+    }
+    // do the fetch
+  }, []);
+
+
+  // material table actually writes to the columns array passed in!
+  let columns = objState.colspecs.length>0 ? cloneDeep(objState.colspecs) : cloneDeep( queryState.cols );
+  /*
+  console.log(objState);
+  console.log("DataTable id=" + args.id) 
+  console.log("DataTable dataref=" + objState.dataref) 
+  console.log("DataTable data=" + queryState.data) 
+  console.log("DataTable queryState =" + queryState) 
+  */
   return (
       <MaterialTable
         icons={tableIcons}
         title={args.label}
-        data={args.state[args.state[args.id].dataref].data}
-        columns={args.state[args.id].colspecs.length>0 ? args.state[args.id].colspecs : args.state[args.state[args.id].dataref].cols} 
-        options={args.state[args.id].options}
+        data={cloneDeep(queryState.data)}
+        columns={columns} 
+        options={objState.options}
       />
   );
 }
 //    <div style={{ maxWidth: "100%" }}>
 //    </div>
-
-
 
 export { DataTable };

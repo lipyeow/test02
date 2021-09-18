@@ -8,6 +8,13 @@ import Box from '@material-ui/core/Box';
 
 import { useStyles } from "./Styles.js";
 import { Widget } from "./Widget.js";
+import { appState } from "./state.js";
+import { cloneDeep } from "lodash";
+import {
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,12 +56,23 @@ function TabContainer(args) {
 //  const handleChange = (event, newValue) => {
 //    setValue(newValue);
 //  };
-  //console.log("tabcontainer args.id = " + args.id);
+  console.log("tabcontainer args.id = " + args.id);
+  console.log(appState);
 
+  const [objState, setObjState] = useRecoilState(appState[args.id]);
+
+  const handleTabChange = (event, newValue) => {
+    console.log("handleTabChange(" + args.id + "): ");
+    //console.log(event);
+    //console.log(newValue);
+    let copyState = cloneDeep(objState);
+    copyState.value = newValue;
+    setObjState(copyState);
+  };
   return (
     <div className={classes.root} >
       <AppBar key={"appbar-"+args.id} position="static" style={{ minWidth: "100%" }}>
-        <Tabs key={"tabs-"+args.id} value={args.state[args.id].value} onChange={args.onChange} 
+        <Tabs key={"tabs-"+args.id} value={objState.value} onChange={handleTabChange} 
             aria-label="simple tabs example"
             variant="scrollable"
             scrollButtons="auto"
@@ -65,8 +83,8 @@ function TabContainer(args) {
         </Tabs>
       </AppBar>
       { args.tabs.map( (tab) =>  
-                (<TabPanel key={"tabpanel-"+tab.id} value={args.state[args.id].value} index={tab.idx} style={{ minWidth: "100%" }}>
-                    { tab.widgets.map( (spec) => (<Widget wspec={spec} callbacks={args.callbacks} state={args.state} />) ) }
+                (<TabPanel key={"tabpanel-"+tab.id} value={objState.value} index={tab.idx} style={{ minWidth: "100%" }}>
+                    { tab.widgets.map( (spec) => (<Widget wspec={spec} />) ) }
                 </TabPanel>
                 )) }
     </div>

@@ -1,11 +1,20 @@
 import "./App.css";
 
-import React from 'react';
-import { Widget } from './Widget.js';
+import React from "react";
+import { appState } from "./state.js";
+import { Widget } from "./Widget.js";
 import { ApolloClient, InMemoryCache, useQuery, gql } from "@apollo/client";
 import { ApolloProvider } from "@apollo/client/react";
-import { PureComponent, Component, forwardRef } from "react";
-import Grid from '@material-ui/core/Grid';
+import { forwardRef } from "react";
+import Grid from "@material-ui/core/Grid";
+import { cloneDeep } from "lodash";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from "recoil";
 
 const client = new ApolloClient({
   uri: "http://127.0.0.1:4000/graphql",
@@ -26,58 +35,6 @@ const data_query = gql`
     }
   }
 `;
-function accumulateStateEntry(state, wspec) {
-  switch (wspec.type) {
-    case "table":
-      state[wspec.id] = {
-        dataref: wspec.dataref,
-        cols: [],
-        colspecs: wspec.colspecs,
-        options: wspec.options
-      };
-      break;
-    case "query":
-      state[wspec.id] = {
-        data: [],
-        cols: [],
-        backend: wspec.backend,
-        endpoint: wspec.endpoint,
-        query: wspec.query,
-        args: wspec.args,
-      };
-      if (wspec.backend === "constant") {
-        state[wspec.id].data = wspec.query.data;
-        state[wspec.id].cols = wspec.query.cols;
-      }
-      break;
-    case "text_input":
-    case "menu":
-      state[wspec.id] = { value: "" };
-      break;
-    case "button":
-      state[wspec.id] = { value: "", trigger: wspec.trigger };
-      break;
-    case "image":
-    case "text":
-      state[wspec.id] = { value: wspec.value };
-      break;
-    case "form":
-      genStateStruct(state, wspec.widgets);
-      break;
-    case "tabcontainer":
-      state[wspec.id] = { value: 0 };
-      wspec.tabs.map( (tab) => genStateStruct(state, tab.widgets) );
-      break;
-    default:
-      break;
-  }
-  return state;
-}
-
-function genStateStruct(cur_state, widgets) {
-  return widgets.reduce(accumulateStateEntry, cur_state);
-}
-
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -165,28 +122,65 @@ function extractColumnSpec(data) {
   });
 }
 
-class App extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.spec = props.spec;
-    this.state   = genStateStruct({}, props.spec.widgets);
-    this.staging = genStateStruct({}, props.spec.widgets);
-    console.log(this.state);
-  }
+/*
+    const callbacks = {
+      handleClick: (id) => this.handleClick(id),
+      handleTextChange: (id, event) => this.handleTextChange(id, event),
+      handleSelectChange: (id, event) => this.handleSelectChange(id, event),
+      handleTabChange: (id, event, newValue) => this.handleTabChange(id, event, newValue),
+      updateData: (id, d, c) => this.updateData(id, d, c),
+    };
+*/
 
-  componentDidMount(){
-    this.spec.widgets.map((wspec) => {
-      if (
-        wspec.type === "query" &&
-        wspec.backend === "urlfetch" &&
-        wspec.fetch_on_init
-      ) {
-        this.runUrlFetchQuery(wspec.id);
-      }
+function App(args) {
+  /*
+  const runUrlFetchQuery = (qid) => {
+    console.log("Run Url Fetch Query: " + qid);
+    const objState = init_fetch_state[qid].state;
+    const setObjState = init_fetch_state[qid].setState;
+    const url = objState.query;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("runUrlFetchQuery : " + data);
+        let copyState = cloneDeep(objState);
+        copyState.data = cloneDeep(data);
+        copyState.cols = extractColumnSpec(data);
+        setObjState(copyState);
+      });
+  };
+
+  // initialize the data that depends on initial fetch query
+  React.useEffect(() => {
+    init_fetch_queries.map((wspec) => {
+      runUrlFetchQuery(wspec.id);
       return null;
     });
+  }, []);
 
-  }
+*/
+  return (
+    <div className={{ flexGrow: 1 }} style={{ maxWidth: "100%" }}>
+      <Grid
+        container
+        spacing={5}
+        direction="row"
+        alignContent="flex-start"
+        alignItems="center"
+        justifyContent="flex-start"
+      >
+        <ApolloProvider client={client}>
+          {args.spec.widgets.map((spec) => (
+            <Widget key={"widget_" + spec.id} wspec={spec} />
+          ))}
+        </ApolloProvider>
+      </Grid>
+    </div>
+  );
+}
+
+/*
+class OldApp extends PureComponent {
   handleTextChange(id, event) {
     console.log("handleTextChange(" + id + "): ");
     //console.log(this.state);
@@ -199,19 +193,6 @@ class App extends PureComponent {
     this.staging[id].value = event.target.value;
     this.setState(this.staging);
   }
-  handleTabChange(id, event, newValue) {
-    console.log("handleTabChange(" + id + "): ");
-    //console.log(event);
-    //console.log(newValue);
-    //console.log(this.state);
-    let frag = {};
-    frag[id] = {...this.staging};
-    this.staging[id] = frag[id];
-    frag[id].value = newValue;
-    //this.setState(frag);
-    this.setState(this.staging);
-  }
-
   runPrestoQuery(qid) {
     console.log("Run Presto Query: " + qid);
     prestoFetch(this.staging[qid].query, (data, cols) => {
@@ -254,23 +235,6 @@ class App extends PureComponent {
     this.setState(this.staging);
   }
 
-  runUrlFetchQuery(qid) {
-    console.log("Run Url Fetch Query: " + qid);
-    let url = this.staging[qid].query;
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        let frag = {};
-        frag[qid] = {...this.staging[qid]}
-        frag[qid].data = data;
-        frag[qid].cols = extractColumnSpec(data);
-        this.staging[qid] = frag[qid]
-        //console.log(frag);
-        this.setState(this.staging);
-      });
-  }
-
   handleClick(id) {
     console.log("handleClick(" + id + "): ");
     const qid = this.staging[id].trigger;
@@ -289,38 +253,9 @@ class App extends PureComponent {
         break;
     }
   }
-  generateWidget(wspec) {
-
-    const callbacks = {
-      handleClick: (id) => this.handleClick(id),
-      handleTextChange: (id, event) => this.handleTextChange(id, event),
-      handleSelectChange: (id, event) => this.handleSelectChange(id, event),
-      handleTabChange: (id, event, newValue) => this.handleTabChange(id, event, newValue),
-      updateData: (id, d, c) => this.updateData(id, d, c),
-    };
-    return (<Widget key={"widget_" + wspec.id}
-            wspec={wspec} 
-            callbacks={callbacks} 
-            state={this.state} 
-            widgets={this.spec.widgets}
-        />);
-  }
-
   render() {
-    return (
-      <div className={{flexGrow: 1}} style={{ maxWidth: "100%" }}>
-        <Grid container spacing={5}
-            direction="row"
-            alignContent='flex-start' 
-            alignItems='center' justifyContent='flex-start'
->
-          <ApolloProvider client={client}>
-            {this.spec.widgets.map((spec) => this.generateWidget(spec))}
-          </ApolloProvider>
-        </Grid>
-      </div>
-    );
   }
 }
+*/
 
-export default App;
+export { App };

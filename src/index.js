@@ -1,16 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, useQuery, gql } from '@apollo/client';
 import { ApolloProvider } from '@apollo/client/react';
+
+import {
+  RecoilRoot,
+} from 'recoil';
 
 import { app_spec } from "./appSpec";
 
 ReactDOM.render(
   <React.StrictMode>
+    <RecoilRoot>
+      <React.Suspense fallback={<div>Loading...</div>}>
       <App spec={app_spec}/>
+      </React.Suspense>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')
 );
