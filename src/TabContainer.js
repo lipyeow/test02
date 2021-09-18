@@ -49,7 +49,7 @@ function TabContainer(args) {
 //  const handleChange = (event, newValue) => {
 //    setValue(newValue);
 //  };
-  console.log("tabcontainer args.id = " + args.id);
+  //console.log("tabcontainer args.id = " + args.id);
 
   return (
     <div className={classes.root} >

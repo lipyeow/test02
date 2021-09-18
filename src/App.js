@@ -169,10 +169,8 @@ class App extends PureComponent {
   constructor(props) {
     super(props);
     this.spec = props.spec;
-    this.state0 = genStateStruct({}, props.spec.widgets);
-    this.state1 = genStateStruct({}, props.spec.widgets);
-    this.staging = this.state1;
-    this.state = this.state0;
+    this.state   = genStateStruct({}, props.spec.widgets);
+    this.staging = genStateStruct({}, props.spec.widgets);
     console.log(this.state);
   }
 
@@ -206,17 +204,12 @@ class App extends PureComponent {
     //console.log(event);
     //console.log(newValue);
     //console.log(this.state);
-    this.state0[id].value = newValue;
-    this.state1[id].value = newValue;
     let frag = {};
-    frag[id] =  this.staging[id];
-    if(this.staging===this.state0){
-        this.staging = this.state1;
-    } else {    
-        this.staging = this.state0;
-    }
-    this.setState(frag);
-    //this.setState(this.staging);
+    frag[id] = {...this.staging};
+    this.staging[id] = frag[id];
+    frag[id].value = newValue;
+    //this.setState(frag);
+    this.setState(this.staging);
   }
 
   runPrestoQuery(qid) {
@@ -268,9 +261,12 @@ class App extends PureComponent {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        this.staging[qid].data = data;
-        this.staging[qid].cols = extractColumnSpec(data);
-        //console.log(this.staging);
+        let frag = {};
+        frag[qid] = {...this.staging[qid]}
+        frag[qid].data = data;
+        frag[qid].cols = extractColumnSpec(data);
+        this.staging[qid] = frag[qid]
+        //console.log(frag);
         this.setState(this.staging);
       });
   }

@@ -55,8 +55,6 @@ well as advising developing nations on their IT projects as a World Bank
 consultant. In 2019, I returned to industry (to FireEye Inc.) to lead
 data-intensive cybersecurity software projects.</i>
 
-                <h2>Projects</h2>
-
                 <h2>Patents</h2>
 
                 <ul>
@@ -66,11 +64,30 @@ data-intensive cybersecurity software projects.</i>
                 A list of <a href="https://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO2&Sect2=HITOFF&p=1&u=%2Fnetahtml%2FPTO%2Fsearch-bool.html&r=0&f=S&l=50&TERM1=Lipyeow&FIELD1=IN&co1=AND&TERM2=Lim&FIELD2=IN&d=PG01">my patent applications</a> at USPTO Patent Application Full-Text and Image Database. </li>
                 </ul>
 
-
+                <h2>Projects</h2>
                 `,
             },
-
-
+            {
+              type: "table",
+              id: "tProjects",
+              label: <i>Interesting projects I have worked on.</i>,
+              dataref: "qProjects",
+              colspecs: [
+                { title: "Dates", field: "display_date" },
+                { title: "Title", field: "title" },
+                { title: "Role", field: "role" },
+                { title: "Affiliation", field: "affiliation" },
+                { title: "Description", field: "desc" },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                tableLayout: "auto",
+              },
+            },
           ],
         },
         {
@@ -260,15 +277,6 @@ data-intensive cybersecurity software projects.</i>
     },
     {
       type: "query",
-      id: "qEdu",
-      backend: "urlfetch",
-      endpoint: "r0",
-      query: "https://lipyeow.github.io/test02/data/education.json",
-      fetch_on_init: false,
-      args: [],
-    },
-    {
-      type: "query",
       id: "qStu",
       backend: "urlfetch",
       endpoint: "r0",
@@ -282,6 +290,15 @@ data-intensive cybersecurity software projects.</i>
       backend: "urlfetch",
       endpoint: "r0",
       query: "https://lipyeow.github.io/test02/data/teaching.json",
+      fetch_on_init: true,
+      args: [],
+    },
+    {
+      type: "query",
+      id: "qProjects",
+      backend: "urlfetch",
+      endpoint: "r0",
+      query: "https://lipyeow.github.io/test02/data/projects.json",
       fetch_on_init: true,
       args: [],
     },

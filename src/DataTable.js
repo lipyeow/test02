@@ -42,6 +42,9 @@ const tableIcons = {
 
 function DataTable(args) {
   //console.log(args.state[args.id]);
+  //console.log("DataTable id=" + args.id) 
+  //console.log("DataTable dataref=" + args.state[args.id].dataref) 
+  //console.log("DataTable data=" + args.state[args.state[args.id].dataref].data) 
   return (
       <MaterialTable
         icons={tableIcons}
