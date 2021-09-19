@@ -1,8 +1,5 @@
 import { app_spec } from "./appSpec";
-import {
-  atom,
-  selector,
-} from 'recoil';
+import { atom } from "recoil";
 
 function accumulateStateEntry(state, wspec) {
   switch (wspec.type) {
@@ -11,7 +8,7 @@ function accumulateStateEntry(state, wspec) {
         dataref: wspec.dataref,
         cols: [],
         colspecs: wspec.colspecs,
-        options: wspec.options
+        options: wspec.options,
       };
       break;
     case "query":
@@ -21,7 +18,7 @@ function accumulateStateEntry(state, wspec) {
         backend: wspec.backend,
         endpoint: wspec.endpoint,
         query: wspec.query,
-        fetch_on_init: wspec.fetch_on_init? true: false,
+        fetch_on_init: wspec.fetch_on_init ? true : false,
         args: wspec.args,
       };
       if (wspec.backend === "constant") {
@@ -45,7 +42,7 @@ function accumulateStateEntry(state, wspec) {
       break;
     case "tabcontainer":
       state[wspec.id] = { value: 0 };
-      wspec.tabs.map( (tab) => genStateStruct(state, tab.widgets) );
+      wspec.tabs.map((tab) => genStateStruct(state, tab.widgets));
       break;
     default:
       break;
@@ -58,16 +55,16 @@ function genStateStruct(cur_state, widgets) {
   return stateStruct;
 }
 
-function genAppState(widgets){
+function genAppState(widgets) {
   const stateStruct = genStateStruct({}, widgets);
   let appState = {};
   //console.log("stateStruct:");
   //console.log(stateStruct);
-  Object.entries(stateStruct).map ( ( keyval ) => {
+  Object.entries(stateStruct).map((keyval) => {
     let obj = atom({
-        key: keyval[0], // unique ID (with respect to other atoms/selectors)
-        default: keyval[1], // default value (aka initial value)
-        });
+      key: keyval[0], // unique ID (with respect to other atoms/selectors)
+      default: keyval[1], // default value (aka initial value)
+    });
     appState[keyval[0]] = obj;
     return obj;
   });
@@ -78,4 +75,4 @@ function genAppState(widgets){
 
 const appState = genAppState(app_spec.widgets);
 
-export {appState};
+export { appState };

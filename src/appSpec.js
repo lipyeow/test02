@@ -84,7 +84,7 @@ data-intensive cybersecurity software projects.</i>
                 paging: false,
                 filtering: false,
                 exportButton: true,
-                maxBodyHeight: "50vh",
+                maxBodyHeight: "70vh",
                 tableLayout: "auto",
               },
             },
@@ -166,7 +166,7 @@ data-intensive cybersecurity software projects.</i>
                 paging: false,
                 filtering: false,
                 exportButton: true,
-                maxBodyHeight: "50vh",
+                maxBodyHeight: "70vh",
                 tableLayout: "auto",
               },
             },
@@ -189,9 +189,7 @@ data-intensive cybersecurity software projects.</i>
             {
               type: "table",
               id: "tStu",
-              label: (
-                <h2>Students</h2>
-              ),
+              label: <h2>Students</h2>,
               dataref: "qStu",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -211,9 +209,7 @@ data-intensive cybersecurity software projects.</i>
             {
               type: "table",
               id: "tTeach",
-              label: (
-                <h2>Courses</h2>
-              ),
+              label: <h2>Courses</h2>,
               dataref: "qTeach",
               colspecs: [
                 { title: "Year", field: "year" },
