@@ -1,4 +1,13 @@
-import { ApolloClient, InMemoryCache, useQuery, gql } from "@apollo/client";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import { cloneDeep } from "lodash";
+
+const gqlClient = new ApolloClient({
+  uri: "http://127.0.0.1:4000/graphql",
+  cache: new InMemoryCache(),
+  fetchOptions: {
+    mode: "no-cors",
+  },
+});
 
 const data_query = gql`
   query GetData($endpoint: String!, $query: String!, $args: String) {
@@ -95,42 +104,28 @@ async function prestoFetch(query, updateState) {
 
 function runPrestoQuery(queryState, setQueryState) {
   console.log("Run Presto Query: ");
-  /*
-    prestoFetch(queryState.query, (data, cols) => {
-      let copyState = cloneDeep(queryState);
-      copyState.data = data;
-      copyState.cols = cols;
-      setQueryState(copyState);
-    });
-    */
+  prestoFetch(queryState.query, (data, cols) => {
+    let copyState = cloneDeep(queryState);
+    copyState.data = data;
+    copyState.cols = cols;
+    setQueryState(copyState);
+  });
 }
 
-function runNativeQuery(queryState, setQueryState) {
-  /*
-    // Extract the values for the endpoint query params
-    const args = [];
-    for (const a of queryState.args) {
-      //console.log(a);
-      args.push(this.staging[a.from].value);
-    }
-    const vars = {
-      endpoint: this.staging[qid].endpoint,
-      query: this.staging[qid].query,
-      args: JSON.stringify(args),
-    };
-    client.query({ query: data_query, variables: vars }).then((result) => {
-      console.log(result);
-      console.log("Before setting data: staging = ");
-      console.log(this.staging);
-      console.log("qid = " + qid);
-      this.staging[qid].data = JSON.parse(result.data.getData.data);
-      // TODO: should be smart application of colspecs on the cols
-      this.staging[qid].cols = JSON.parse(result.data.getData.colstr);
-      console.log("Before setState: staging = ");
-      console.log(this.staging);
-      this.setState(this.staging);
-    });
-    */
+function runNativeQuery(client, qargs, queryState, setQueryState) {
+  const vars = {
+    endpoint: queryState.endpoint,
+    query: queryState.query,
+    args: JSON.stringify(qargs),
+  };
+  client.query({ query: data_query, variables: vars }).then((result) => {
+    console.log(result);
+    let copyState = cloneDeep(queryState);
+    copyState.data = JSON.parse(result.data.getData.data);
+    copyState.cols = JSON.parse(result.data.getData.colstr);
+    console.log(copyState);
+    setQueryState(copyState);
+  });
 }
 
 /*
@@ -151,4 +146,4 @@ function runNativeQuery(queryState, setQueryState) {
   };
 */
 
-export { runPrestoQuery, runNativeQuery };
+export { gqlClient, runPrestoQuery, runNativeQuery };

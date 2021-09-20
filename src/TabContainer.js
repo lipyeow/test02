@@ -93,7 +93,7 @@ function TabContainer(args) {
           style={{ minWidth: "100%" }}
         >
           {tab.widgets.map((spec) => (
-            <Widget wspec={spec} />
+            <Widget key={"Widget-" + spec.id} wspec={spec} />
           ))}
         </TabPanel>
       ))}

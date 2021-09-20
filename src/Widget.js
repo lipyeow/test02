@@ -9,7 +9,6 @@ import { MyButton } from "./MyButton.js";
 
 // Grid will use 12 units has maxwidth
 function Widget(args) {
-
   switch (args.wspec.type) {
     case "tabcontainer":
       return (
@@ -60,7 +59,8 @@ function Widget(args) {
           key={args.wspec.id}
           id={args.wspec.id}
           label={args.wspec.label}
-        />);
+        />
+      );
     case "image":
       return (
         <Grid
@@ -73,9 +73,9 @@ function Widget(args) {
             <img
               alt="portrait"
               border="1"
+              height={args.wspec.imageheight}
               style={{
                 marginTop: "2em",
-                height: "220px",
               }}
               src={args.wspec.value}
             />

@@ -9,6 +9,7 @@ const app_spec = {
       type: "image",
       id: "img1",
       width: 4,
+      imageheight: "170px",
       justify: "center",
       value: "https://lipyeow.github.io/home/img/lypic2018.jpg",
     },
@@ -19,9 +20,9 @@ const app_spec = {
       justify: "flex-start",
       value: `
       <h1>Lipyeow Lim, Ph.D. &nbsp; &nbsp; &#26519;&#31435;&#32768; </h1>
-      <i>I am a computer scientist, educator, and software engineer by profession -- and a martial artist by avocation.</i>
+      <i>I am a computer scientist, educator, and software engineer by profession</i>
+      <div align="right"><i> -- and a martial artist by avocation.</i></div>
       
-      <br/>
       <br/>
       Fremont, CA, USA <br/>
       <b>Email</b>: lipyeow at gmail dot com
@@ -35,9 +36,170 @@ const app_spec = {
       id: "tabcontainer01",
       tabs: [
         {
-          label: "Software Engineer",
+          label: " Computer Scientist",
           id: "tc01-0",
           idx: 0,
+          widgets: [
+            {
+              type: "text",
+              id: "txt4",
+              width: 12,
+              justify: "flex-start",
+              value: `
+                <i>My scientific research career started with my masters thesis 
+                on pixel ordering in images. I then investigated the use of 
+                machine learning techniques in optimizing database processing 
+                in my doctoral dissertation. I continued with more general 
+                data management research at the IBM Thomas J. Watson Research
+                Center early in my career before embarking on a professorship
+                at the University of Hawaii at Manoa.</i>
+
+                <h2>Education</h2>
+
+                <ul>
+                <li>2004 - <b>Ph.D.</b> Computer Science, Duke University. 
+                    <br/>
+                    <ul>
+                    Thesis: <i>Online Methods for Database Optimization</i>.
+                    Advisor: Jeffrey Scott Vitter
+                    </ul>
+                </li>
+                <li>2000 - <b>M.Sc.</b> Information Systems & Computer Science, National University of Singapore. 
+                    <br/>
+                    <ul>
+                    Thesis: <i>A Theoretical Look at Pixel Ordering</i>.
+                    Advisor: Philip M. Long
+                    </ul>
+                </li>
+                <li>1999 - <b>B.Sc.</b> Information Systems & Computer Science, National University of Singapore. 
+                    <br/>
+                    <ul>
+                    Project: <i>Implementation of the mobile IPv4 configuration option for PPP IPCP (RFC 2290)</i>.
+                    Advisor: Yong-Chiang (Y.C.) Tay
+                    </ul>
+                </li>
+                </ul>
+
+                <h2>Publications</h2>
+                `,
+            },
+            {
+              type: "table",
+              id: "tPub",
+              label: "<i>Scientific articles I have (co-)authored.</i>",
+              dataref: "qPub",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Venue", field: "venue" },
+                { title: "Title", field: "title" },
+                { title: "Authors", field: "authors" },
+                {
+                  title: "pdf",
+                  field: "pdf",
+                  render: (rowData) => (
+                    <a
+                      href={"https://lipyeow.github.io/home/" + rowData.pdf}
+                      download
+                    >
+                      pdf
+                    </a>
+                  ),
+                },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "70vh",
+                padding: "dense",
+              },
+            },
+          ],
+        },
+        {
+          label: "Educator",
+          id: "tc01-1",
+          idx: 1,
+          widgets: [
+            {
+              type: "text",
+              id: "txt_educator",
+              width: 12,
+              justify: "flex-start",
+              value: `
+      <i>Between 2009 and 2019, I was a professor of Information and Computer Science at the University of Hawaii at Manoa where I taught both undergraduate and graduate courses and advised Masters and Doctoral students.</i>
+
+        <h2>Student Advisees</h2>
+      `,
+            },
+            {
+              type: "table",
+              id: "tStu",
+              label: "<i>Students I have had the privilege of mentoring</i>",
+              dataref: "qStu",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Degree", field: "degree" },
+                { title: "Name", field: "name" },
+                { title: "Thesis", field: "thesis" },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                padding: "dense",
+                tableLayout: "auto",
+              },
+            },
+            {
+              type: "text",
+              id: "txt_courses_title",
+              width: 12,
+              justify: "flex-start",
+              value: `<h2>Courses</h2>`,
+            },
+
+            {
+              type: "table",
+              id: "tTeach",
+              label: "<i>Undergraduate and graduate courses I have taught</i>",
+              dataref: "qTeach",
+              colspecs: [
+                { title: "Year", field: "year" },
+                { title: "Semester", field: "semester" },
+                { title: "Course", field: "num" },
+                { title: "Title", field: "title", defaultGroupOrder: 0 },
+                { title: "Level", field: "level" },
+                {
+                  title: "Website",
+                  field: "url",
+                  render: (rowData) => (
+                    <a href={rowData.url} download>
+                      {rowData.url}
+                    </a>
+                  ),
+                },
+              ],
+              options: {
+                search: true,
+                paging: false,
+                filtering: false,
+                exportButton: true,
+                maxBodyHeight: "50vh",
+                tableLayout: "auto",
+                padding: "dense",
+                grouping: true,
+              },
+            },
+          ],
+        },
+        {
+          label: "Software Engineer",
+          id: "tc01-2",
+          idx: 2,
           widgets: [
             {
               type: "text",
@@ -70,7 +232,7 @@ data-intensive cybersecurity software projects.</i>
             {
               type: "table",
               id: "tProjects",
-              label: <i>Interesting projects I have worked on.</i>,
+              label: "<i>Interesting projects I have worked on.</i>",
               dataref: "qProjects",
               colspecs: [
                 { title: "Dates", field: "display_date" },
@@ -85,160 +247,13 @@ data-intensive cybersecurity software projects.</i>
                 filtering: false,
                 exportButton: true,
                 maxBodyHeight: "70vh",
+                padding: "dense",
                 tableLayout: "auto",
               },
             },
           ],
         },
-        {
-          label: "Computer Scientist",
-          id: "tc01-1",
-          idx: 1,
-          widgets: [
-            {
-              type: "text",
-              id: "txt4",
-              width: 12,
-              justify: "flex-start",
-              value: `
-                <i>My scientific research career started with my masters thesis 
-                on pixel ordering in images. I then investigated the use of 
-                machine learning techniques in optimizing database processing 
-                in my doctoral dissertation. I continued with more general 
-                data management research at the IBM Thomas J. Watson Research
-                Center early in my career before embarking on a professorship
-                at the University of Hawaii at Manoa.</i>
 
-                <h2>Education</h2>
-
-                <ul>
-                <li>2004 - Ph.D. Computer Science, Duke University. 
-                    <br/>
-                    <ul>
-                    Thesis: <i>Online Methods for Database Optimization</i>.
-                    Advisor: Jeffrey Scott Vitter
-                    </ul>
-                </li>
-                <li>2000 - M.Sc. Information Systems & Computer Science, National University of Singapore. 
-                    <br/>
-                    <ul>
-                    Thesis: <i>A Theoretical Look at Pixel Ordering</i>.
-                    Advisor: Philip M. Long
-                    </ul>
-                </li>
-                <li>1999 - B.Sc. Information Systems & Computer Science, National University of Singapore. 
-                    <br/>
-                    <ul>
-                    Project: <i>Implementation of the mobile IPv4 configuration option for PPP IPCP (RFC 2290)</i>.
-                    Advisor: Yong-Chiang (Y.C.) Tay
-                    </ul>
-                </li>
-                </ul>
-
-                <h2>Publications</h2>
-                `,
-            },
-            {
-              type: "table",
-              id: "tPub",
-              label: <i>Scientific articles I have (co-)authored.</i>,
-              dataref: "qPub",
-              colspecs: [
-                { title: "Year", field: "year" },
-                { title: "Venue", field: "venue" },
-                { title: "Title", field: "title" },
-                { title: "Authors", field: "authors" },
-                {
-                  title: "pdf",
-                  field: "pdf",
-                  render: (rowData) => (
-                    <a
-                      href={"https://lipyeow.github.io/home/" + rowData.pdf}
-                      download
-                    >
-                      pdf
-                    </a>
-                  ),
-                },
-              ],
-              options: {
-                search: true,
-                paging: false,
-                filtering: false,
-                exportButton: true,
-                maxBodyHeight: "70vh",
-                tableLayout: "auto",
-              },
-            },
-          ],
-        },
-        {
-          label: "Educator",
-          id: "tc01-2",
-          idx: 2,
-          widgets: [
-            {
-              type: "text",
-              id: "txt_educator",
-              width: 12,
-              justify: "flex-start",
-              value: `
-      <i>Between 2009 and 2019, I was a professor of Information and Computer Science at the University of Hawaii at Manoa where I taught both undergraduate and graduate courses and advised Masters and Doctoral students.</i>
-      `,
-            },
-            {
-              type: "table",
-              id: "tStu",
-              label: <h2>Students</h2>,
-              dataref: "qStu",
-              colspecs: [
-                { title: "Year", field: "year" },
-                { title: "Degree", field: "degree" },
-                { title: "Name", field: "name" },
-                { title: "Thesis", field: "thesis" },
-              ],
-              options: {
-                search: true,
-                paging: false,
-                filtering: false,
-                exportButton: true,
-                maxBodyHeight: "50vh",
-                tableLayout: "auto",
-              },
-            },
-            {
-              type: "table",
-              id: "tTeach",
-              label: <h2>Courses</h2>,
-              dataref: "qTeach",
-              colspecs: [
-                { title: "Year", field: "year" },
-                { title: "Semester", field: "semester" },
-                { title: "Course", field: "num" },
-                { title: "Title", field: "title", defaultGroupOrder: 0 },
-                { title: "Level", field: "level" },
-                {
-                  title: "Website",
-                  field: "url",
-                  render: (rowData) => (
-                    <a href={rowData.url} download>
-                      {rowData.url}
-                    </a>
-                  ),
-                },
-              ],
-              options: {
-                search: true,
-                paging: false,
-                filtering: false,
-                exportButton: true,
-                maxBodyHeight: "50vh",
-                tableLayout: "auto",
-                grouping: true,
-              },
-            },
-          ],
-        },
         {
           label: "Martial Artist",
           id: "tc01-3",
