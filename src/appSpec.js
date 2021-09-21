@@ -8,7 +8,7 @@ const app_spec = {
     {
       type: "image",
       id: "img1",
-      width: 4,
+      width: 3,
       imageheight: "170px",
       justify: "center",
       value: "https://lipyeow.github.io/home/img/lypic2018.jpg",

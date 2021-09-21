@@ -118,6 +118,8 @@ function runNativeQuery(client, qargs, queryState, setQueryState) {
     query: queryState.query,
     args: JSON.stringify(qargs),
   };
+  //console.log("runNativeQuery: ");
+  //console.log(vars);
   client.query({ query: data_query, variables: vars }).then((result) => {
     console.log(result);
     let copyState = cloneDeep(queryState);

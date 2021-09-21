@@ -1,14 +1,16 @@
 import Grid from "@material-ui/core/Grid";
-//import Paper from "@material-ui/core/Paper";
+import Paper from "@material-ui/core/Paper";
 import { TabContainer } from "./TabContainer.js";
 import { DataTable } from "./DataTable.js";
 import { QueryForm } from "./QueryForm.js";
 import { TextInput } from "./TextInput.js";
 import { Menu } from "./Menu.js";
 import { MyButton } from "./MyButton.js";
+import { useStyles } from "./Styles.js";
 
 // Grid will use 12 units has maxwidth
 function Widget(args) {
+  const classes = useStyles();
   switch (args.wspec.type) {
     case "tabcontainer":
       return (
@@ -63,42 +65,32 @@ function Widget(args) {
       );
     case "image":
       return (
-        <Grid
-          container
-          xs={args.wspec.width}
-          justifyContent={args.wspec.justify}
-          alignItems="center"
-        >
-          <Grid item xs={args.wspec.width}>
+          <Grid item xs="12" sm={args.wspec.width}>
+            <center>
             <img
               alt="portrait"
               border="1"
               height={args.wspec.imageheight}
               style={{
                 marginTop: "2em",
+                marginLeft: "2em",
               }}
               src={args.wspec.value}
             />
+            </center>
           </Grid>
-        </Grid>
       );
     case "text":
       return (
-        <Grid
-          container
-          xs={args.wspec.width}
-          justifyContent={args.wspec.justify}
-        >
-          <Grid item xs={args.wspec.width}>
+          <Grid item xs="12" sm={args.wspec.hasOwnProperty("width")? args.wspec.width:12}>
             <div
               key={args.wspec.id}
+              align="left"
+              maxWidth="100%"
               dangerouslySetInnerHTML={{ __html: args.wspec.value }}
             />
           </Grid>
-        </Grid>
       );
-    //          <Paper className={classes.paper}>
-    //          </Paper>
     default:
       return null;
   }
