@@ -92,10 +92,27 @@ function DataTable(args) {
   }, []);
 
   // material table actually writes to the columns array passed in!
-  let columns =
-    objState.colspecs.length > 0
-      ? cloneDeep(objState.colspecs)
-      : cloneDeep(queryState.cols);
+  // colspecs provide in table always overwrites derive specs from query
+  let columns = [];
+  if (objState.colspecs.length > 0) {
+    // convert link type to render
+    columns = objState.colspecs.map((cs) => {
+      const spec = cloneDeep(cs);
+      if (spec.hasOwnProperty("link")) {
+        const prefix = spec.link.hasOwnProperty("prefix")
+          ? spec.link.prefix
+          : "";
+        spec.render = (rowData) => (
+          <a href={prefix + rowData[spec.field]} download>
+            {spec.link.text.length === 0 ? rowData[spec.field] : spec.link.text}
+          </a>
+        );
+      }
+      return spec;
+    });
+  } else {
+    columns = cloneDeep(queryState.cols);
+  }
   /*
   console.log(objState);
   console.log("DataTable id=" + args.id) 

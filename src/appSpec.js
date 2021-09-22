@@ -89,21 +89,21 @@ const app_spec = {
               label: "<i>Scientific articles I have (co-)authored.</i>",
               dataref: "qPub",
               colspecs: [
-                { title: "Year", field: "year" },
+                { title: "Year", field: "year", defaultSort: "desc", },
                 { title: "Venue", field: "venue" },
-                { title: "Title", field: "title" },
+                {
+                  title: "Title",
+                  field: "title",
+                  cellStyle: { minWidth: "350px" },
+                },
                 { title: "Authors", field: "authors" },
                 {
                   title: "pdf",
                   field: "pdf",
-                  render: (rowData) => (
-                    <a
-                      href={"https://lipyeow.github.io/home/" + rowData.pdf}
-                      download
-                    >
-                      pdf
-                    </a>
-                  ),
+                  link: {
+                    prefix: "https://lipyeow.github.io/home/",
+                    text: "pdf",
+                  },
                 },
               ],
               options: {
@@ -141,8 +141,16 @@ const app_spec = {
               colspecs: [
                 { title: "Year", field: "year" },
                 { title: "Degree", field: "degree" },
-                { title: "Name", field: "name" },
-                { title: "Thesis", field: "thesis" },
+                {
+                  title: "Name",
+                  field: "name",
+                  cellStyle: { minWidth: "250px" },
+                },
+                {
+                  title: "Thesis",
+                  field: "thesis",
+                  cellStyle: { minWidth: "550px" },
+                },
               ],
               options: {
                 search: true,
@@ -168,7 +176,7 @@ const app_spec = {
               label: "<i>Undergraduate and graduate courses I have taught</i>",
               dataref: "qTeach",
               colspecs: [
-                { title: "Year", field: "year" },
+                { title: "Year", field: "year", defaultSort: "desc" },
                 { title: "Semester", field: "semester" },
                 { title: "Course", field: "num" },
                 { title: "Title", field: "title", defaultGroupOrder: 0 },
@@ -176,11 +184,7 @@ const app_spec = {
                 {
                   title: "Website",
                   field: "url",
-                  render: (rowData) => (
-                    <a href={rowData.url} download>
-                      {rowData.url}
-                    </a>
-                  ),
+                  link: { text: "" },
                 },
               ],
               options: {
@@ -235,11 +239,31 @@ data-intensive cybersecurity software projects.</i>
               label: "<i>Interesting projects I have worked on.</i>",
               dataref: "qProjects",
               colspecs: [
-                { title: "Dates", field: "display_date" },
-                { title: "Title", field: "title" },
-                { title: "Role", field: "role" },
-                { title: "Affiliation", field: "affiliation" },
-                { title: "Description", field: "desc" },
+                {
+                  title: "Dates",
+                  field: "display_date",
+                  cellStyle: { cellWidth: "15%" },
+                },
+                {
+                  title: "Title",
+                  field: "title",
+                  cellStyle: { cellWidth: "20%" },
+                },
+                {
+                  title: "Role",
+                  field: "role",
+                  cellStyle: { cellWidth: "15%" },
+                },
+                {
+                  title: "Affiliation",
+                  field: "affiliation",
+                  cellStyle: { cellWidth: "15%" },
+                },
+                {
+                  title: "Description",
+                  field: "desc",
+                  cellStyle: { minWidth: "350px" },
+                },
               ],
               options: {
                 search: true,

@@ -87,6 +87,11 @@ function Widget(args) {
               key={args.wspec.id}
               align="left"
               maxWidth="100%"
+              style={{
+                marginTop: "10px",
+                marginLeft: "10px",
+              }}
+
               dangerouslySetInnerHTML={{ __html: args.wspec.value }}
             />
           </Grid>
