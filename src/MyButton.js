@@ -1,6 +1,6 @@
 import Button from "@material-ui/core/Button";
 import { appState } from "./state.js";
-import { cloneDeep } from "lodash";
+//import { cloneDeep } from "lodash";
 import { useRecoilState, useRecoilCallback } from "recoil";
 import { gqlClient, runPrestoQuery, runNativeQuery } from "./queries.js";
 
@@ -14,11 +14,13 @@ function MyButton(args) {
   // Extract the values for the endpoint query params
   const handleClick = useRecoilCallback(({ snapshot }) => async () => {
     console.log("handleClick(" + args.id + "): ");
-    const qargs = await Promise.all(queryState.args.map(async (a) => {
-      const qarg = await snapshot.getPromise(appState[a.from]);
-      //console.log(qarg);
-      return qarg.value;
-    }));
+    const qargs = await Promise.all(
+      queryState.args.map(async (a) => {
+        const qarg = await snapshot.getPromise(appState[a.from]);
+        //console.log(qarg);
+        return qarg.value;
+      })
+    );
     //console.log(qargs);
     switch (queryState.backend) {
       case "presto":

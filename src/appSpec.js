@@ -89,7 +89,7 @@ const app_spec = {
               label: "<i>Scientific articles I have (co-)authored.</i>",
               dataref: "qPub",
               colspecs: [
-                { title: "Year", field: "year", defaultSort: "desc", },
+                { title: "Year", field: "year", defaultSort: "desc" },
                 { title: "Venue", field: "venue" },
                 {
                   title: "Title",

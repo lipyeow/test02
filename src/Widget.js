@@ -1,16 +1,16 @@
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+//import Paper from "@material-ui/core/Paper";
 import { TabContainer } from "./TabContainer.js";
 import { DataTable } from "./DataTable.js";
 import { QueryForm } from "./QueryForm.js";
 import { TextInput } from "./TextInput.js";
 import { Menu } from "./Menu.js";
 import { MyButton } from "./MyButton.js";
-import { useStyles } from "./Styles.js";
+//import { useStyles } from "./Styles.js";
 
 // Grid will use 12 units has maxwidth
 function Widget(args) {
-  const classes = useStyles();
+  //const classes = useStyles();
   switch (args.wspec.type) {
     case "tabcontainer":
       return (
@@ -38,7 +38,6 @@ function Widget(args) {
           <QueryForm key={args.wspec.id} widgets={args.wspec.widgets} />
         </Grid>
       );
-
     case "text_input":
       return (
         <TextInput
@@ -65,8 +64,8 @@ function Widget(args) {
       );
     case "image":
       return (
-          <Grid item xs="12" sm={args.wspec.width}>
-            <center>
+        <Grid item xs="12" sm={args.wspec.width}>
+          <center>
             <img
               alt="portrait"
               border="1"
@@ -77,24 +76,27 @@ function Widget(args) {
               }}
               src={args.wspec.value}
             />
-            </center>
-          </Grid>
+          </center>
+        </Grid>
       );
     case "text":
       return (
-          <Grid item xs="12" sm={args.wspec.hasOwnProperty("width")? args.wspec.width:12}>
-            <div
-              key={args.wspec.id}
-              align="left"
-              maxWidth="100%"
-              style={{
-                marginTop: "10px",
-                marginLeft: "10px",
-              }}
-
-              dangerouslySetInnerHTML={{ __html: args.wspec.value }}
-            />
-          </Grid>
+        <Grid
+          item
+          xs="12"
+          sm={args.wspec.hasOwnProperty("width") ? args.wspec.width : 12}
+        >
+          <div
+            key={args.wspec.id}
+            align="left"
+            maxWidth="100%"
+            style={{
+              marginTop: "10px",
+              marginLeft: "10px",
+            }}
+            dangerouslySetInnerHTML={{ __html: args.wspec.value }}
+          />
+        </Grid>
       );
     default:
       return null;
