@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => (
-{
+const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
@@ -19,23 +18,22 @@ const useStyles = makeStyles((theme) => (
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   },
   customOne: {
-    padding: '3rem 15rem',
+    padding: "3rem 15rem",
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    fontFamily: 'Open Sans',
+    fontFamily: "Open Sans",
   },
   customTwo: {
-    padding: '0rem',
-    color: '#484848',
-    backgroundColor: '#bbbbbb',
-    fontFamily: 'Open Sans',
-    fontSize: '1rem',
+    padding: "0rem",
+    color: "#484848",
+    backgroundColor: "#bbbbbb",
+    fontFamily: "Open Sans",
+    fontSize: "1rem",
   },
-}
-));
+}));
 
 export { useStyles };

@@ -10,10 +10,16 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "material-table": "^1.69.3",
+    "chokidar": "^3.5.2",
+    "core-js": "^3.17.3",
+    "joi": "^17.4.2",
+    "jspdf": "^2.1.0",
+    "lodash": "^4.17.21",
+    "material-table": "^1.63.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
+    "recoil": "^0.4.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

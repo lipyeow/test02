@@ -1,6 +1,6 @@
-import { edu_data } from "./data.js"
+import { edu_data } from "./data.js";
 
-// text: 
+// text:
 //  - widths are in grid xs units
 //  - justify is passed to grid container justifyContent prop
 const app_spec = {
@@ -10,7 +10,7 @@ const app_spec = {
       id: "img1",
       width: 4,
       justify: "center",
-      value: "https://lipyeow.github.io/home/img/lypic2018.jpg"
+      value: "https://lipyeow.github.io/home/img/lypic2018.jpg",
     },
     {
       type: "text",
@@ -73,11 +73,13 @@ const app_spec = {
               label: <i>Scientific publications I have (co-)authored.</i>,
               dataref: "qPub",
               colspecs: [
-                { title: "Year", field: "year", },
-                { title: "Venue", field: "venue", },
-                { title: "Title", field: "title", },
-                { title: "Authors", field: "authors", },
-                { title: "pdf", field: "pdf",
+                { title: "Year", field: "year" },
+                { title: "Venue", field: "venue" },
+                { title: "Title", field: "title" },
+                { title: "Authors", field: "authors" },
+                {
+                  title: "pdf",
+                  field: "pdf",
                   render: (rowData) => (
                     <a
                       href={"https://lipyeow.github.io/home/" + rowData.pdf}
@@ -106,7 +108,9 @@ const app_spec = {
             {
               type: "table",
               id: "tStu",
-              label: <i>Students whom I have had the privilege of mentoring.</i>,
+              label: (
+                <i>Students whom I have had the privilege of mentoring.</i>
+              ),
               dataref: "qStu",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -132,7 +136,11 @@ const app_spec = {
             {
               type: "table",
               id: "tTeach",
-              label: <i>Courses I have taught at the University of Hawaii at Manoa.</i>,
+              label: (
+                <i>
+                  Courses I have taught at the University of Hawaii at Manoa.
+                </i>
+              ),
               dataref: "qTeach",
               colspecs: [
                 { title: "Year", field: "year" },
@@ -235,11 +243,11 @@ const app_spec = {
       endpoint: "r0",
       query: {
         cols: [],
-        data: edu_data  
+        data: edu_data,
       },
       args: [],
-    }
-    ],
+    },
+  ],
 };
 
-export { app_spec, };
+export { app_spec };
