@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
     },
     flexgrow: 1,
     backgroundColor: theme.palette.background.paper,
+    //backgroundColor: "#FCF3CF",
   },
   formControl: {
     margin: theme.spacing(1),
@@ -27,10 +28,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     fontFamily: "Open Sans",
   },
-  customTwo: {
+  tabs: {
     padding: "0rem",
-    color: "#484848",
-    backgroundColor: "#bbbbbb",
+    color: "#404040",
+    //backgroundColor: "#bbbbbb",
+    //backgroundColor: "#D4E6F1",
+    backgroundColor: "#A9CCE3",
     fontFamily: "Open Sans",
     fontSize: "1rem",
   },

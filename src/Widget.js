@@ -64,15 +64,17 @@ function Widget(args) {
       );
     case "image":
       return (
-        <Grid item xs="12" sm={args.wspec.width}>
+        <Grid item xs="12"
+            sm={args.wspec.width} 
+          >
           <center>
             <img
               alt="portrait"
               border="1"
               height={args.wspec.imageheight}
               style={{
-                marginTop: "2em",
-                marginLeft: "2em",
+                margintop: "2em",
+                marginleft: "2em",
               }}
               src={args.wspec.value}
             />

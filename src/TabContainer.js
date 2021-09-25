@@ -74,7 +74,8 @@ function TabContainer(args) {
           aria-label="simple tabs example"
           variant="scrollable"
           scrollButtons="auto"
-          className={classes.customTwo}
+          className={classes.tabs}
+          TabIndicatorProps={{style: {background: '#3498DB'}}}
         >
           {args.tabs.map((tab) => (
             <Tab
